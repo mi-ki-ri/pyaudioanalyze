@@ -28,32 +28,35 @@ class Analyzer_With_GenAI:
         uri = myfile.uri
         mime = myfile.mime_type
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash-exp",
-            contents=[
-                types.Part.from_uri(uri, mime),
-                types.Part.from_text(
-                    "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。"
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.0-flash-exp",
+                contents=[
+                    types.Part.from_uri(uri, mime),
+                    types.Part.from_text(
+                        "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。"
+                    ),
+                    types.Part.from_text(
+                        """例: {
+                instruments: ['エレキギター','シンセベース'], 
+                jenre: "ネオソウル",  
+                tags: [ネオソウル, チルアウト, ローファイ, ギター, スローテンポ, シャッフルビート, 16フィール, インストゥルメンタル],
+                tempo_feel: "スロー",
+                liner_notes: "この作品には素晴らしく情感のこもったギターと美しい音色があります。"
+                associated_words: ["夜", "星空", "冬", "夜明け", "煙草"],
+                associated_color: "deep blue"
+                }
+                """
+                    ),
+                ],
+                config=types.GenerateContentConfig(
+                    temperature=0.2,
+                    response_mime_type="application/json",
+                    response_schema=SongInfo,
                 ),
-                types.Part.from_text(
-                    """例: {
-              instruments: ['エレキギター','シンセベース'], 
-              jenre: "ネオソウル",  
-              tags: [ネオソウル, チルアウト, ローファイ, ギター, スローテンポ, シャッフルビート, 16フィール, インストゥルメンタル],
-              tempo_feel: "スロー",
-              liner_notes: "この作品には素晴らしく情感のこもったギターと美しい音色があります。"
-              associated_words: ["夜", "星空", "冬", "夜明け", "煙草"],
-              associated_color: "deep blue"
-              }
-            """
-                ),
-            ],
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                response_mime_type="application/json",
-                response_schema=SongInfo,
-            ),
-        )
+            )
 
-        loaded = json.loads(response.text)
-        return loaded
+            loaded = json.loads(response.text)
+            return loaded | {"error": False}
+        except:
+            return {"error": True}

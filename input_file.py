@@ -19,6 +19,8 @@ def main():
     all_data = analyzed | geminized
 
     pprint.pprint(all_data)
+    if all_data["error"] == True:
+        print("エラーです！")
 
 
 main()
