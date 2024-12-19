@@ -26,6 +26,7 @@ class Analyzer_With_GenAI:
 
         uri = myfile.uri
         mime = myfile.mime_type
+
         response = client.models.generate_content(
             model="gemini-2.0-flash-exp",
             contents=[
@@ -53,5 +54,9 @@ class Analyzer_With_GenAI:
             ),
         )
 
-        loaded = json.loads(response.text)
-        return loaded
+        if response.status_code == 200:
+
+            loaded = json.loads(response.text)
+            return loaded
+        else:
+            return {error: True}
