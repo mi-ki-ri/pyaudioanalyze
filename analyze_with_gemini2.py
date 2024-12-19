@@ -1,5 +1,6 @@
 import json
 import os
+import pprint
 from google import genai
 from google.genai import types
 from pydantic import BaseModel
@@ -54,9 +55,5 @@ class Analyzer_With_GenAI:
             ),
         )
 
-        if response.status_code == 200:
-
-            loaded = json.loads(response.text)
-            return loaded
-        else:
-            return {error: True}
+        loaded = json.loads(response.text)
+        return loaded
