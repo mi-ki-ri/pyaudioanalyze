@@ -50,7 +50,7 @@ class Analyzer_With_GenAI:
                     ),
                 ],
                 config=types.GenerateContentConfig(
-                    temperature=0.2,
+                    temperature=0.4,
                     response_mime_type="application/json",
                     response_schema=SongInfo,
                 ),
