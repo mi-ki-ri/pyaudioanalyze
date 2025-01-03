@@ -5,6 +5,8 @@ from analyze_with_gemini2 import Analyzer_With_GenAI
 from analyze_with_librosa import AudioAnalyzer
 from analyze_with_mutagen import Analyzer_With_Mutagen
 
+import pydub
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -13,10 +15,19 @@ def main():
 
     FILE_PATH = parse.FILE_PATH
 
+    if ".wav" in FILE_PATH:
+        print("wavファイルです！ mp3に変換します！")
+        sound = pydub.AudioSegment.from_wav(FILE_PATH)
+        sound.export(FILE_PATH.replace(".wav", ".mp3"), format="mp3", bitrate="192k")
+        FILE_PATH = FILE_PATH.replace(".wav", ".mp3")
+
+    print("Librosaで解析します！")
     analyzed = AudioAnalyzer(file_path=FILE_PATH).analyze_technical_features()
 
+    print("Mutagenで解析します！")
     mutagenized = Analyzer_With_Mutagen(FILE_PATH).analyze()
 
+    print("GenAIで解析します！")
     geminized = Analyzer_With_GenAI(FILE_PATH).analyze(
         refference=(analyzed | mutagenized)
     )
