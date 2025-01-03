@@ -18,7 +18,7 @@ def main():
     if ".wav" in FILE_PATH:
         print("wavファイルです！ mp3に変換します！")
         sound = pydub.AudioSegment.from_wav(FILE_PATH)
-        sound.export(FILE_PATH.replace(".wav", ".mp3"), format="mp3", bitrate="192k")
+        sound.export(FILE_PATH.replace(".wav", ".mp3"), format="mp3", bitrate="96k")
         FILE_PATH = FILE_PATH.replace(".wav", ".mp3")
 
     print("Librosaで解析します！")
