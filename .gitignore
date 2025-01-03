@@ -1,3 +1,4 @@
 venv
 songs/**
 __pycache__
+set_api_key.sh
