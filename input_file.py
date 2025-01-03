@@ -3,6 +3,7 @@ import pprint
 
 from analyze_with_gemini2 import Analyzer_With_GenAI
 from analyze_with_librosa import AudioAnalyzer
+from analyze_with_mutagen import Analyzer_With_Mutagen
 
 
 def main():
@@ -14,9 +15,13 @@ def main():
 
     analyzed = AudioAnalyzer(file_path=FILE_PATH).analyze_technical_features()
 
-    geminized = Analyzer_With_GenAI(FILE_PATH).analyze()
+    mutagenized = Analyzer_With_Mutagen(FILE_PATH).analyze()
 
-    all_data = analyzed | geminized
+    geminized = Analyzer_With_GenAI(FILE_PATH).analyze(
+        refference=(analyzed | mutagenized)
+    )
+
+    all_data = analyzed | geminized | mutagenized
 
     pprint.pprint(all_data)
     if all_data["error"] == True:

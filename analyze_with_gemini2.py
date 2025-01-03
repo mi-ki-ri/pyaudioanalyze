@@ -21,7 +21,7 @@ class Analyzer_With_GenAI:
         self.FILE_PATH = file_path
         self.API_KEY = os.environ.get("GOOGLE_API_KEY")
 
-    def analyze(self):
+    def analyze(self, refference: dict):
         client = genai.Client(api_key=self.API_KEY)
         myfile = client.files.upload(path=self.FILE_PATH)
 
@@ -34,7 +34,12 @@ class Analyzer_With_GenAI:
                 contents=[
                     types.Part.from_uri(uri, mime),
                     types.Part.from_text(
-                        "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。"
+                        "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。ライナーノーツは200字程度ほしい。"
+                    ),
+                    types.Part.from_text(
+                        f"""参考までに、今までに取れたメタデータを記す。
+                            {json.dumps( refference) }
+                        """
                     ),
                     types.Part.from_text(
                         """例: {
@@ -55,6 +60,8 @@ class Analyzer_With_GenAI:
                     response_schema=SongInfo,
                 ),
             )
+
+            # pprint.pprint(response)
 
             loaded = json.loads(response.text)
             return loaded | {"error": False}
