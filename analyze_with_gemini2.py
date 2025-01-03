@@ -8,12 +8,15 @@ from pydantic import BaseModel
 
 class SongInfo(BaseModel):
     tags: list[str]
-    jenre: str
+    jenre: list[str]
     instruments: list[str]
     liner_notes: str
     tempo_feel: str
     associated_words: list[str]
     associated_color: str
+    associated_emotions: list[str]
+    associated_color_rgb: list[int]
+    associated_emojis: list[str]
 
 
 class Analyzer_With_GenAI:
@@ -34,7 +37,7 @@ class Analyzer_With_GenAI:
                 contents=[
                     types.Part.from_uri(uri, mime),
                     types.Part.from_text(
-                        "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。ライナーノーツは200字程度ほしい。"
+                        "この曲のジャンル、タグなどの情報をJSON形式で書き出してみてほしい。タグと連想単語は10個程度ほしい。ライナーノーツは200字程度ほしい。ジャンルは5個程度ほしい。"
                     ),
                     types.Part.from_text(
                         f"""参考までに、今までに取れたメタデータを記す。
@@ -44,12 +47,15 @@ class Analyzer_With_GenAI:
                     types.Part.from_text(
                         """例: {
                 instruments: ['エレキギター','シンセベース'], 
-                jenre: "ネオソウル",  
+                jenre: ["ネオソウル", "ローファイ", "チルアウト", "ヒップホップ", "R&B"],  
                 tags: [ネオソウル, チルアウト, ローファイ, ギター, スローテンポ, シャッフルビート, 16フィール, インストゥルメンタル],
                 tempo_feel: "スロー",
                 liner_notes: "この作品には素晴らしく情感のこもったギターと美しい音色があります。"
                 associated_words: ["夜", "星空", "冬", "夜明け", "煙草"],
                 associated_color: "deep blue"
+                associated_color_rgb: [0, 0, 139],
+                associated_emotions: ["melancholy", "nostalgia", "hope", "loneliness"],
+                associated_emojis: ["🌌", "🌃", "🌠"]
                 }
                 """
                     ),
