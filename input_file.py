@@ -23,9 +23,14 @@ def main():
     elif ".mp3" in FILE_PATH:
         print("mp3ファイルです！ ビットレートを96kに変換します！")
         sound = pydub.AudioSegment.from_mp3(FILE_PATH)
-        sound.export(FILE_PATH, format="mp3", bitrate="96k")
+        sound.export(FILE_PATH + ".96.mp3", format="mp3", bitrate="96k")
+    elif ".flac" in FILE_PATH:
+        print("flacファイルです！ mp3に変換します！")
+        sound = pydub.AudioSegment.from_file(FILE_PATH, format="flac")
+        sound.export(FILE_PATH.replace(".flac", ".mp3"), format="mp3", bitrate="96k")
+        FILE_PATH = FILE_PATH.replace(".flac", ".mp3")
     else:
-        print("wavでもmp3でもありません！")
+        print("wavでもmp3でもflacでもありません！")
         return
 
     print("Librosaで解析します！")
