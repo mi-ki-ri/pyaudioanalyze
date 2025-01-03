@@ -20,6 +20,13 @@ def main():
         sound = pydub.AudioSegment.from_wav(FILE_PATH)
         sound.export(FILE_PATH.replace(".wav", ".mp3"), format="mp3", bitrate="96k")
         FILE_PATH = FILE_PATH.replace(".wav", ".mp3")
+    elif ".mp3" in FILE_PATH:
+        print("mp3ファイルです！ ビットレートを96kに変換します！")
+        sound = pydub.AudioSegment.from_mp3(FILE_PATH)
+        sound.export(FILE_PATH, format="mp3", bitrate="96k")
+    else:
+        print("wavでもmp3でもありません！")
+        return
 
     print("Librosaで解析します！")
     analyzed = AudioAnalyzer(file_path=FILE_PATH).analyze_technical_features()
